@@ -4,6 +4,6 @@ pages_build_output_dir = "public"
 
 [vars]
 # These will be set in the Cloudflare Dashboard
-QWEN_API_KEY = "sk-d7b19433c56d4d3ca5a2dc94f53cd8a2"
+QWEN_API_KEY = ""
 QWEN_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 QWEN_MODEL_NAME = "qwen3.6-plus"
