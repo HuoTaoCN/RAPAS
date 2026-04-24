@@ -2,6 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/ra-favicon.svg" />
+  <link rel="shortcut icon" href="/ra-favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GovInsight-AI RA 重复诉求智能分析系统</title>
   <style>
@@ -71,19 +73,18 @@
     }
 
     .topbar-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(147, 197, 253, 0.18));
-      border: 1px solid rgba(191, 219, 254, 0.25);
-      color: #dbeafe;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      overflow: hidden;
       box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
       flex: none;
+    }
+
+    .topbar-logo img {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     .title-block h2 {
@@ -795,7 +796,9 @@
     <main class="main" id="workbench">
       <div class="topbar">
         <div class="topbar-left">
-          <div class="topbar-logo">RA</div>
+          <div class="topbar-logo">
+            <img src="/ra-favicon.svg" alt="GovInsight-AI RA 图标" />
+          </div>
           <div class="title-block">
             <div class="series-name">
               GovInsight-AI RA
