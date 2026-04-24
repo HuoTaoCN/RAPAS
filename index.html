@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GovInsight-AI RA 重复诉求智能分析系统</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --panel: #ffffff;
+      --panel-soft: #f7f9fc;
+      --line: #d9e1ec;
+      --text: #182230;
+      --muted: #62748a;
+      --primary: #1c64f2;
+      --primary-soft: #e8f0ff;
+      --success: #0f9f6e;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 18%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .main {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0f172a, #16284b 60%, #1d4ed8 100%);
+      color: #fff;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.18);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(147, 197, 253, 0.18));
+      border: 1px solid rgba(191, 219, 254, 0.25);
+      color: #dbeafe;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      flex: none;
+    }
+
+    .title-block h2 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+
+    .title-block p {
+      margin: 6px 0 0;
+      color: #cbd5e1;
+    }
+
+    .series-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: #bfdbfe;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 700;
+      vertical-align: middle;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #94a3b8;
+      letter-spacing: 0.02em;
+      text-transform: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(28, 100, 242, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.95fr);
+      gap: 22px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .panel-header {
+      padding: 20px 22px 14px;
+      border-bottom: 1px solid #dbeafe;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #1e3a8a;
+    }
+
+    .panel-header p {
+      margin: 6px 0 0;
+      color: #5b6b82;
+      font-size: 14px;
+    }
+
+    .panel-body {
+      padding: 20px 22px 22px;
+    }
+
+    .panel-accent {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 800;
+      flex: none;
+    }
+
+    .panel-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #344256;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text);
+    }
+
+    .field textarea {
+      min-height: 260px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .full-span {
+      grid-column: 1 / -1;
+    }
+
+    .hint-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: #445266;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric-card {
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid #e4ebf5;
+    }
+
+    .metric-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .metric-card strong {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .metric-foot {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #4b647f;
+    }
+
+    .status-card {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f8fbff;
+      border: 1px solid #dbe8ff;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e7eef9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress > div {
+      width: 68%;
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #60a5fa);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+      gap: 22px;
+    }
+
+    .section-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: #fff;
+      color: #435165;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: #bfd4ff;
+    }
+
+    .report-preview {
+      background: linear-gradient(180deg, #fcfdff 0%, #f7faff 100%);
+      border: 1px solid #e6edf8;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .report-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      border-bottom: 1px solid #e7eef8;
+      padding-bottom: 16px;
+    }
+
+    .report-title h4 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .report-title p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tag {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag-blue {
+      color: #1d4ed8;
+      background: #dbeafe;
+    }
+
+    .tag-green {
+      color: #047857;
+      background: #d1fae5;
+    }
+
+    .tag-amber {
+      color: #b45309;
+      background: #fef3c7;
+    }
+
+    .tag-red {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .summary {
+      padding: 16px;
+      background: #fff;
+      border: 1px solid #e5edf7;
+      border-radius: 16px;
+      line-height: 1.7;
+      color: #314053;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .insight-card {
+      padding: 16px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #e6edf7;
+    }
+
+    .insight-card h5 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .insight-card p {
+      margin: 0;
+      color: #536377;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #edf2f7;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: #425164;
+      background: #f8fbff;
+      font-weight: 600;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .timeline-item time {
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    .timeline-content {
+      padding: 14px 16px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid #e7edf8;
+    }
+
+    .timeline-content strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .timeline-content p {
+      margin: 0;
+      color: #536377;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .recommendation-list,
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .recommendation-item,
+    .bullet-item {
+      padding: 14px 16px;
+      border-radius: 15px;
+      background: #f9fbfe;
+      border: 1px solid #e5edf6;
+    }
+
+    .recommendation-item strong,
+    .bullet-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .recommendation-item p,
+    .bullet-item p {
+      margin: 0;
+      color: #5b6a7f;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .matrix-card {
+      border-radius: 16px;
+      padding: 16px;
+      color: #fff;
+      min-height: 120px;
+    }
+
+    .matrix-card h5 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .matrix-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .matrix-card.blue { background: linear-gradient(135deg, #2563eb, #1e40af); }
+    .matrix-card.green { background: linear-gradient(135deg, #059669, #047857); }
+    .matrix-card.orange { background: linear-gradient(135deg, #ea580c, #c2410c); }
+    .matrix-card.slate { background: linear-gradient(135deg, #475569, #1f2937); }
+
+    .footer-note {
+      padding: 18px 22px;
+      background: #fffbea;
+      border: 1px solid #f6e4a6;
+      border-radius: 18px;
+      color: #7c5b12;
+      line-height: 1.7;
+    }
+
+    .footer-note strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .site-footer {
+      background: #fff;
+      border-top: 1px solid #e2e8f0;
+      padding: 18px 22px;
+      border-radius: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .site-footer-left,
+    .site-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer strong {
+      color: #334155;
+    }
+
+    .footer-link {
+      color: #475569;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: #0f172a;
+    }
+
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      text-decoration: none;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .footer-pill:hover {
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(2, 6, 23, 0.55);
+      backdrop-filter: blur(5px);
+      z-index: 50;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(920px, 100%);
+      max-height: 88vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
+      border: 1px solid #dbe7f6;
+    }
+
+    .modal-header,
+    .modal-footer {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f8fbff;
+      border-bottom: 1px solid #e5edf7;
+    }
+
+    .modal-footer {
+      border-bottom: 0;
+      border-top: 1px solid #e5edf7;
+      justify-content: flex-end;
+    }
+
+    .modal-footer .btn-secondary {
+      background: #fff;
+      color: #475569;
+      border: 1px solid #d7e2f0;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .modal-content {
+      padding: 22px;
+      overflow: auto;
+      line-height: 1.7;
+      color: #344256;
+      white-space: pre-wrap;
+      background: #fff;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid #d7e2f0;
+      border-radius: 999px;
+      background: #fff;
+      color: #475569;
+      cursor: pointer;
+    }
+
+    .modal-content h1,
+    .modal-content h2,
+    .modal-content h3 {
+      color: #0f172a;
+      margin: 0 0 12px;
+    }
+
+    .modal-content ul {
+      margin: 8px 0 16px 18px;
+    }
+
+    .modal-content code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    @media (max-width: 1260px) {
+      .hero,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .main {
+        padding: 18px;
+      }
+
+      .input-grid,
+      .metrics,
+      .insight-grid,
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar,
+      .topbar-left,
+      .panel-header,
+      .report-title,
+      .modal-header,
+      .modal-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="main" id="workbench">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-logo">RA</div>
+          <div class="title-block">
+            <div class="series-name">
+              GovInsight-AI RA
+              <span class="version-badge">V0.1.0</span>
+            </div>
+            <h2>GovInsight-AI RA 重复诉求智能分析系统</h2>
+            <p>面向 12345 / 政务热线管理人员的重复诉求识别、行为模式研判与分级处置界面。</p>
+            <div class="subtitle">Repetitive Appeal Pattern Analysis System</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-secondary">导入工单</button>
+          <button class="btn btn-secondary">查看历史</button>
+          <button class="btn btn-primary">开始分析</button>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-heading">
+              <span class="panel-accent">01</span>
+              <div>
+              <h3>输入区</h3>
+              <p>支持结构化 JSON 与非结构化文本自动抽取，保留原始上下文便于复核。</p>
+              </div>
+            </div>
+            <span class="tag tag-blue">支持批量导入</span>
+          </div>
+          <div class="panel-body">
+            <div class="input-grid">
+              <div class="field">
+                <label>诉求人脱敏 ID</label>
+                <input type="text" value="U-2026-04-AX91" />
+              </div>
+              <div class="field">
+                <label>分析周期</label>
+                <input type="text" value="2026-04-01 至 2026-04-10" />
+              </div>
+              <div class="field">
+                <label>输入格式</label>
+                <select>
+                  <option>JSON / 文本自动识别</option>
+                  <option>仅 JSON</option>
+                  <option>仅非结构化文本</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>分析模式</label>
+                <select>
+                  <option>标准研判</option>
+                  <option>快速筛查</option>
+                  <option>人工复核辅助</option>
+                </select>
+              </div>
+              <div class="field full-span">
+                <label>诉求原始数据</label>
+                <textarea spellcheck="false">{
+  "user_id": "U-2026-04-AX91",
+  "analysis_period": "2026-04-01 至 2026-04-10",
+  "complaints": [
+    {
+      "id": "GD20260401001",
+      "time": "2026-04-01 09:12",
+      "content": "反映小区5号楼外墙渗水，多次报修仍未处理，夜间噪音严重。",
+      "department": "住建部门",
+      "reply": "已转物业核实处理。",
+      "evaluation": "回复笼统，没有实质处理。"
+    },
+    {
+      "id": "GD20260403016",
+      "time": "2026-04-03 14:26",
+      "content": "5号楼渗水问题仍未解决，物业承诺后一直无人上门，墙皮继续脱落。",
+      "department": "街道办",
+      "reply": "建议继续联系物业。",
+      "evaluation": "还是推来推去。"
+    }
+  ]
+}</textarea>
+              </div>
+            </div>
+            <div class="hint-row">
+              <span class="chip">自动字段抽取</span>
+              <span class="chip">同人聚合</span>
+              <span class="chip">相似诉求识别</span>
+              <span class="chip">H 类谨慎提示</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-heading">
+              <span class="panel-accent">02</span>
+              <div>
+              <h3>分析总览</h3>
+              <p>先展示可读性强的关键指标，再进入报告细节。</p>
+              </div>
+            </div>
+            <span class="tag tag-green">人工审核辅助</span>
+          </div>
+          <div class="panel-body">
+            <div class="metrics">
+              <div class="metric-card">
+                <span>诉求总量</span>
+                <strong>18</strong>
+                <div class="metric-foot">10 天内重复提交，峰值集中在 4 月 3 日</div>
+              </div>
+              <div class="metric-card">
+                <span>涉及部门</span>
+                <strong>4</strong>
+                <div class="metric-foot">住建、街道、物业监管、社区服务</div>
+              </div>
+              <div class="metric-card">
+                <span>高相似工单</span>
+                <strong>11</strong>
+                <div class="metric-foot">相似度 > 0.85，存在明显复述现象</div>
+              </div>
+              <div class="metric-card">
+                <span>优先复核等级</span>
+                <strong>中高</strong>
+                <div class="metric-foot">真实问题信号强，建议专人统筹办理</div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="status-line">
+                <strong>当前主判定</strong>
+                <span class="tag tag-blue">A 类 + C 类</span>
+              </div>
+              <div class="status-line">
+                <span>解释</span>
+                <span>同一核心问题未解，引发跨部门衍生投诉</span>
+              </div>
+              <div class="progress"><div></div></div>
+              <div class="status-line">
+                <span>结论可信度</span>
+                <span>68% 已完成证据匹配</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-2" id="report">
+        <div class="section-stack">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-heading">
+                <span class="panel-accent">03</span>
+                <div>
+                <h3>报告预览</h3>
+                <p>结构严格对应 GovInsight-AI RA 输出格式，方便直接导出 Markdown / PDF。</p>
+                </div>
+              </div>
+              <div class="tabs">
+                <button class="tab active">执行摘要</button>
+                <button class="tab">统计分析</button>
+                <button class="tab">行为研判</button>
+                <button class="tab">处置建议</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="report-preview">
+                <div class="report-title">
+                  <div>
+                    <h4># GovInsight-AI RA 分析报告</h4>
+                    <p><strong>诉求人ID：</strong>U-2026-04-AX91<br /><strong>分析周期：</strong>2026-04-01 至 2026-04-10<br /><strong>报告生成时间：</strong>2026-04-23 10:30</p>
+                  </div>
+                  <span class="tag tag-amber">建议人工复核</span>
+                </div>
+
+                <div class="summary">
+                  该用户在 10 天内围绕同一渗水问题持续反映，并逐步扩展到物业不作为、监管失效等关联主题。现有证据更符合“真实高频诉求”叠加“衍生扩展型诉求”，不宜仅将重复提交视为异常行为。最优先动作是指定专人统一协调住建、街道与物业监管单位，围绕根源问题形成一次性综合处置方案。
+                </div>
+
+                <div class="insight-grid">
+                  <div class="insight-card">
+                    <h5>一、基础统计</h5>
+                    <p>共 18 条诉求，覆盖 4 个部门，平均每日 1.8 条，单日峰值 5 条。问题集中在房屋渗水、夜间噪音、物业处置拖延。</p>
+                  </div>
+                  <div class="insight-card">
+                    <h5>二、时间规律分析</h5>
+                    <p>前两次提交间隔超过 48 小时，后续在收到泛化答复后出现 24 小时内再次提交，呈“等待后升级”的自然投诉节奏。</p>
+                  </div>
+                  <div class="insight-card">
+                    <h5>三、内容相似性分析</h5>
+                    <p>11 条工单与核心诉求相似度超过 0.85，但多条包含“墙皮继续脱落”“承诺未上门”等新增事实，不属于纯模板复制。</p>
+                  </div>
+                  <div class="insight-card">
+                    <h5>四、覆盖广度与关联性</h5>
+                    <p>跨部门投诉存在明确主线：渗水未解 → 物业不作为 → 监管履职质疑，逻辑链条完整，具备衍生扩展特征。</p>
+                  </div>
+                </div>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th>类型</th>
+                      <th>名称</th>
+                      <th>置信度</th>
+                      <th>核心依据</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>A类</td>
+                      <td>真实高频诉求</td>
+                      <td><span class="tag tag-green">高</span></td>
+                      <td>核心问题持续未解，且每轮提交伴随新增事实与等待期。</td>
+                    </tr>
+                    <tr>
+                      <td>C类</td>
+                      <td>衍生扩展型诉求</td>
+                      <td><span class="tag tag-blue">中高</span></td>
+                      <td>后续投诉围绕同一主问题向物业、监管责任逐级扩展。</td>
+                    </tr>
+                    <tr>
+                      <td>B类</td>
+                      <td>情绪驱动型重复诉求</td>
+                      <td><span class="tag tag-amber">低中</span></td>
+                      <td>收到笼统答复后短时重复提交，但并非主要行为模式。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-heading">
+                <span class="panel-accent">04</span>
+                <div>
+                <h3>时间与链路视图</h3>
+                <p>把重复诉求从“列表”转成“事件链”，便于识别递进关系与阶段性爆发。</p>
+                </div>
+              </div>
+              <span class="tag tag-blue">事件追踪</span>
+            </div>
+            <div class="panel-body">
+              <div class="timeline">
+                <div class="timeline-item">
+                  <time>04-01 09:12</time>
+                  <div class="timeline-content">
+                    <strong>核心诉求首次出现</strong>
+                    <p>反映 5 号楼渗水和夜间噪音，诉求对象集中于设施修复与现场核查。</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <time>04-03 14:26</time>
+                  <div class="timeline-content">
+                    <strong>等待后再次反映</strong>
+                    <p>新增“物业承诺后未上门”“墙皮继续脱落”等事实，符合真实问题持续存在的表达模式。</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <time>04-04 10:05</time>
+                  <div class="timeline-content">
+                    <strong>诉求链条外扩</strong>
+                    <p>开始指向物业不作为与监管履职问题，进入衍生扩展阶段。</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <time>04-05 08:40</time>
+                  <div class="timeline-content">
+                    <strong>情绪抬升但事实主线稳定</strong>
+                    <p>评价用词更强烈，但仍围绕原始问题提出可核实事项，未出现明显失真内容。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-stack">
+          <div class="panel" id="warning">
+            <div class="panel-header">
+              <div class="panel-heading">
+                <span class="panel-accent">05</span>
+                <div>
+                <h3>处置建议面板</h3>
+                <p>按“诉求人 / 系统 / 部门”三层输出，便于直接分派任务。</p>
+                </div>
+              </div>
+              <span class="tag tag-green">可执行</span>
+            </div>
+            <div class="panel-body">
+              <div class="recommendation-list">
+                <div class="recommendation-item">
+                  <strong>针对诉求人</strong>
+                  <p>升级督办，指定专人 48 小时内主动联系，统一说明办理进展与现场核查安排。</p>
+                </div>
+                <div class="recommendation-item">
+                  <strong>针对热线系统</strong>
+                  <p>将该用户纳入“7 日高频重复诉求”预警规则，并对高相似工单自动聚合展示。</p>
+                </div>
+                <div class="recommendation-item">
+                  <strong>针对相关部门</strong>
+                  <p>要求住建、街道、物业监管联合核查渗水根因，避免分别答复导致问题空转。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="ledger">
+            <div class="panel-header">
+              <div class="panel-heading">
+                <span class="panel-accent">06</span>
+                <div>
+                <h3>风险与审慎提示</h3>
+                <p>把系统边界直接呈现在界面上，防止过度依赖算法结论。</p>
+                </div>
+              </div>
+              <span class="tag tag-red">审慎使用</span>
+            </div>
+            <div class="panel-body">
+              <div class="bullet-list">
+                <div class="bullet-item">
+                  <strong>辅助结论而非定性结论</strong>
+                  <p>系统只提供行为模式线索，最终处置决定需由人工审核确认。</p>
+                </div>
+                <div class="bullet-item">
+                  <strong>优先保护真实诉求</strong>
+                  <p>即使行为存在异常节奏，也必须单独提取并推动真实问题解决。</p>
+                </div>
+                <div class="bullet-item">
+                  <strong>H 类仅做信号提示</strong>
+                  <p>涉及精神健康或认知异常判断时，只标注“疑似需关怀跟进”，不得系统单独定性。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-heading">
+                <span class="panel-accent">07</span>
+                <div>
+                <h3>策略卡片</h3>
+                <p>把提示词中的复杂规则，转化为运营人员可理解的策略模块。</p>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="matrix">
+                <div class="matrix-card blue">
+                  <h5>高频预警</h5>
+                  <p>同人 7 日内超过阈值时自动触发人工复核，并显示相似工单聚合结果。</p>
+                </div>
+                <div class="matrix-card green">
+                  <h5>报告导出</h5>
+                  <p>按标准 Markdown 模板生成正式报告，可同步导出 PDF 与工单摘要。</p>
+                </div>
+                <div class="matrix-card orange">
+                  <h5>满意度隔离</h5>
+                  <p>对疑似批量异常评价做标注，单独进入考核影响评估，不直接混入常规统计。</p>
+                </div>
+                <div class="matrix-card slate">
+                  <h5>关怀台账</h5>
+                  <p>对需持续关注对象建立跨部门共享视图，减少重复核查和机械退单。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        <strong>界面定位说明</strong>
+        这版原型优先服务“热线管理人员”和“复核专员”两个角色，核心是让使用者在一个页面完成数据导入、规律识别、报告阅读、风险提示和处置分派。若后续要进入开发阶段，建议下一步补上“批量列表页”“单用户历史画像页”“规则配置页”和“报告导出页”四个正式页面。
+      </div>
+
+      <footer class="site-footer">
+        <div class="site-footer-left">
+          <span><strong>&copy; 2026 ra.huotao.com</strong></span>
+          <a class="footer-link" href="mailto:mail@huotao.com">mail@huotao.com</a>
+        </div>
+        <div class="site-footer-right">
+          <button class="footer-pill" type="button" data-modal-target="readme-modal">README</button>
+          <a class="footer-pill" href="https://github.com/HuoTaoCN/RAPAS" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="footer-pill" href="LICENSE" target="_blank" rel="noopener noreferrer">GPL v3.0 License</a>
+          <span>GovInsight-AI 系列应用</span>
+          <span>Powered by 见微 (AInsight)</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <div class="modal" id="readme-modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="readme-modal-title">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="panel-accent">RD</span>
+          <span id="readme-modal-title">项目文档 (README)</span>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal aria-label="关闭">×</button>
+      </div>
+      <div class="modal-content" id="readme-modal-content">正在加载 README...</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-close-modal>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modalTriggers = document.querySelectorAll("[data-modal-target]");
+      const closeTriggers = document.querySelectorAll("[data-close-modal]");
+      const modal = document.getElementById("readme-modal");
+      const content = document.getElementById("readme-modal-content");
+      let readmeLoaded = false;
+
+      function openModal() {
+        if (!modal) return;
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        if (!readmeLoaded && content) {
+          fetch("README.md")
+            .then(function (response) {
+              if (!response.ok) {
+                throw new Error("README load failed");
+              }
+              return response.text();
+            })
+            .then(function (text) {
+              content.textContent = text;
+              readmeLoaded = true;
+            })
+            .catch(function () {
+              content.textContent = "README 加载失败，请稍后直接打开 README.md 文件查看。";
+            });
+        }
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      modalTriggers.forEach(function (button) {
+        button.addEventListener("click", openModal);
+      });
+
+      closeTriggers.forEach(function (button) {
+        button.addEventListener("click", closeModal);
+      });
+
+      if (modal) {
+        modal.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

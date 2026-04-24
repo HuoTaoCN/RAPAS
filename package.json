@@ -1,0 +1,21 @@
+{
+  "name": "rapas",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev --command \"vite --port 5173\" --proxy 5173",
+    "build": "vite build",
+    "deploy": "npm run build && npx wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "hono": "^4.11.4",
+    "openai": "^6.16.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241230.0",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5",
+    "wrangler": "^3.101.0"
+  }
+}
