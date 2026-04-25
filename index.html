@@ -1049,18 +1049,12 @@
                 <p>结构严格对应 GovInsight-AI RA 输出格式，方便直接导出 Markdown / PDF。</p>
                 </div>
               </div>
-              <div class="tabs" id="report-tabs">
-                <button class="tab active" data-section="executive_summary">执行摘要</button>
-                <button class="tab" data-section="statistical_analysis">统计分析</button>
-                <button class="tab" data-section="behavioral_judgment">行为研判</button>
-                <button class="tab" data-section="disposal_recommendations">处置建议</button>
-              </div>
             </div>
             <div class="panel-body">
               <div class="report-preview" id="report-preview">
                 <div class="report-title">
                   <div>
-                    <h4># GovInsight-AI RA 分析报告</h4>
+                    <h4># 重复诉求智能分析报告</h4>
                     <p><strong>诉求人ID：</strong>U-2026-04-AX91<br /><strong>分析周期：</strong>2026-04-01 至 2026-04-10<br /><strong>报告生成时间：</strong>2026-04-23 10:30</p>
                   </div>
                   <span class="tag tag-amber">建议人工复核</span>
@@ -1311,7 +1305,6 @@
       const generateReportBtn = document.getElementById("generate-report-btn");
       const inputData = document.getElementById("input-data");
       const reportPreview = document.getElementById("report-preview");
-      const reportTabs = document.getElementById("report-tabs");
       const caseSelector = document.getElementById("case-selector");
 
       let currentAnalysisResult = null;
@@ -1435,28 +1428,23 @@
       }
 
       if (analyzeBtn && inputData && reportPreview) {
-        // Tab switching logic
-        if (reportTabs) {
-          reportTabs.querySelectorAll(".tab").forEach(tab => {
-            tab.addEventListener("click", () => {
-              if (!currentAnalysisResult || !currentAnalysisResult.sections) return;
+        if (generateReportBtn) {
+          generateReportBtn.addEventListener("click", function() {
+            if (!currentAnalysisResult || !currentAnalysisResult.report_markdown) {
+              alert("请先进行分析以生成报告内容");
+              return;
+            }
 
-              const sectionKey = tab.getAttribute("data-section");
-              const content = currentAnalysisResult.sections[sectionKey];
-
-              if (content) {
-                // Update active tab
-                reportTabs.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-                tab.classList.add("active");
-
-                // Update content
-                reportPreview.innerHTML = `
-                  <div style="padding: 20px; line-height: 1.6;">
-                    ${marked.parse(content)}
-                  </div>
-                `;
-              }
-            });
+            const blob = new Blob([currentAnalysisResult.report_markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+            a.href = url;
+            a.download = `重复诉求智能分析报告_${timestamp}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
           });
         }
 

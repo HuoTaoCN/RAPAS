@@ -49,7 +49,7 @@ export const RAPAS_ANALYSIS_PROMPT = `
     "behavioral_judgment": "第五项（行为模式研判结论）的 Markdown 内容",
     "disposal_recommendations": "第六、七项（影响评估、分级处置建议）的 Markdown 内容"
   },
-  "report_markdown": "这里是完整的 Markdown 格式分析报告，结构需包含：# RAPAS 分析报告, 一至七大项, 及执行摘要。"
+  "report_markdown": "这里是完整的 Markdown 格式分析报告，结构需包含：# 重复诉求智能分析报告, 一至七大项, 及执行摘要。"
 }
 
 **分析原则**：
