@@ -803,8 +803,13 @@
       overflow: auto;
       line-height: 1.7;
       color: #344256;
-      white-space: pre-wrap;
       background: #fff;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
     }
 
     .icon-btn {
@@ -817,11 +822,53 @@
       cursor: pointer;
     }
 
+    .modal-content blockquote {
+      border-left: 4px solid var(--primary-soft);
+      padding-left: 16px;
+      margin: 16px 0;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .modal-content pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
     .modal-content h1,
     .modal-content h2,
-    .modal-content h3 {
+    .modal-content h3,
+    .modal-content h4 {
       color: #0f172a;
-      margin: 0 0 12px;
+      margin: 24px 0 12px;
+      font-weight: 700;
+    }
+
+    .modal-content hr {
+      border: 0;
+      border-top: 1px solid #e2e8f0;
+      margin: 24px 0;
+    }
+
+    .modal-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    .modal-content th,
+    .modal-content td {
+      border: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .modal-content th {
+      background: #f8fafc;
     }
 
     .modal-content ul {
@@ -833,6 +880,7 @@
       padding: 2px 6px;
       border-radius: 6px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
     }
 
     @media (max-width: 1260px) {
@@ -1324,7 +1372,7 @@
               return response.text();
             })
             .then(function (text) {
-              content.textContent = text;
+              content.innerHTML = marked.parse(text);
               readmeLoaded = true;
             })
             .catch(function () {
