@@ -632,12 +632,76 @@
       border-radius: 15px;
       background: #f9fbfe;
       border: 1px solid #e5edf6;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .bullet-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dispatch-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dispatch-btn:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .dispatch-btn.dispatched {
+      background: #d1fae5;
+      color: #059669;
+      border-color: #a7f3d0;
+      cursor: default;
+    }
+
+    .priority-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Input Data Header Actions */
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .text-link {
+      font-size: 12px;
+      color: #3b82f6;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .text-link:hover {
+      color: #2563eb;
+    }
+
+    .report-content {
+      line-height: 1.8;
+      color: #334155;
     }
 
     .recommendation-item strong,
     .bullet-item strong {
       display: block;
-      margin-bottom: 6px;
+      margin: 0;
       font-size: 14px;
     }
 
@@ -1031,7 +1095,10 @@
                 </select>
               </div>
               <div class="field full-span">
-                <label>诉求原始数据</label>
+                <div class="field-header">
+                  <label>诉求原始数据</label>
+                  <span class="text-link" id="load-sample-btn">加载 JSON 示例模板</span>
+                </div>
                 <textarea id="input-data" spellcheck="false">{
   "user_id": "U-2026-04-AX91",
   "analysis_period": "2026-04-01 至 2026-04-10",
@@ -1095,7 +1162,9 @@
               </div>
               <div class="metric-card">
                 <span>优先复核等级</span>
-                <strong id="metric-priority">中高</strong>
+                <div style="margin: 4px 0;">
+                  <span class="tag tag-amber" id="metric-priority">中高</span>
+                </div>
                 <div class="metric-foot" id="metric-priority-foot">真实问题信号强，建议专人统筹办理</div>
               </div>
             </div>
@@ -1259,15 +1328,24 @@
             <div class="panel-body">
               <div class="bullet-list">
                 <div class="bullet-item">
-                  <strong>针对诉求人</strong>
+                  <div class="bullet-item-header">
+                    <strong>针对诉求人</strong>
+                    <button class="dispatch-btn" onclick="simulateDispatch(this, '诉求人')">立即派发</button>
+                  </div>
                   <p id="suggestion-user">提供专人对接，减少跨部门流转，明确告知办理节点与预期效果。</p>
                 </div>
                 <div class="bullet-item">
-                  <strong>针对业务系统</strong>
+                  <div class="bullet-item-header">
+                    <strong>针对业务系统</strong>
+                    <button class="dispatch-btn" onclick="simulateDispatch(this, '业务系统')">立即执行</button>
+                  </div>
                   <p id="suggestion-system">将关联工单进行物理合并，避免重复派单与绩效重复计算。</p>
                 </div>
                 <div class="bullet-item">
-                  <strong>针对相关部门</strong>
+                  <div class="bullet-item-header">
+                    <strong>针对相关部门</strong>
+                    <button class="dispatch-btn" onclick="simulateDispatch(this, '相关部门')">联办派发</button>
+                  </div>
                   <p id="suggestion-dept">要求住建、街道、物业监管联合核查渗水根因，避免分别答复导致问题空转。</p>
                 </div>
               </div>
@@ -1337,11 +1415,6 @@
         </div>
       </section>
 
-      <div class="footer-note">
-        <strong>界面定位说明</strong>
-        这版原型优先服务“热线管理人员”和“复核专员”两个角色，核心是让使用者在一个页面完成数据导入、规律识别、报告阅读、风险提示和处置分派。若后续要进入开发阶段，建议下一步补上“批量列表页”“单用户历史画像页”“规则配置页”和“报告导出页”四个正式页面。
-      </div>
-
       <footer class="site-footer">
         <div class="site-footer-left">
           <span><strong>&copy; 2026 ra.huotao.com</strong></span>
@@ -1386,9 +1459,41 @@
       const generateReportBtn = document.getElementById("generate-report-btn");
       const inputData = document.getElementById("input-data");
       const reportPreview = document.getElementById("report-preview");
-      const caseSelector = document.getElementById("case-selector");
+        const loadSampleBtn = document.getElementById("load-sample-btn");
+        const caseSelector = document.getElementById("case-selector");
 
-      let currentAnalysisResult = null;
+        let currentAnalysisResult = null;
+
+      // Simulate Dispatch Action
+      window.simulateDispatch = function(btn, target) {
+        if (btn.classList.contains('dispatched')) return;
+        
+        const originalText = btn.textContent;
+        btn.textContent = "派发中...";
+        btn.disabled = true;
+        
+        setTimeout(() => {
+          btn.textContent = "已派发";
+          btn.classList.add('dispatched');
+          console.log(`Dispatched to ${target}`);
+        }, 800);
+      };
+
+      if (loadSampleBtn && inputData) {
+        loadSampleBtn.addEventListener("click", () => {
+          const template = {
+            user_id: "U-SAMPLE-001",
+            analysis_period: "2026-04-01 至 2026-04-07",
+            complaints: [
+              { id: "W001", time: "2026-04-01 10:00", dept: "示例部门", content: "这里是诉求内容示例 1..." },
+              { id: "W002", time: "2026-04-02 11:00", dept: "示例部门", content: "这里是重复诉求内容示例 2..." }
+            ]
+          };
+          inputData.value = JSON.stringify(template, null, 2);
+          document.getElementById("user-id").value = template.user_id;
+          document.getElementById("period").value = template.analysis_period;
+        });
+      }
 
       function openModal() {
         if (!modal) return;
@@ -1591,6 +1696,15 @@
               throw new Error("API 请求失败");
             }
 
+            // Reset dispatch buttons
+            document.querySelectorAll('.dispatch-btn').forEach(btn => {
+              btn.classList.remove('dispatched');
+              btn.disabled = false;
+              if (btn.onclick.toString().includes('诉求人')) btn.textContent = '立即派发';
+              else if (btn.onclick.toString().includes('业务系统')) btn.textContent = '立即执行';
+              else btn.textContent = '联办派发';
+            });
+
             const result = await response.json();
             currentAnalysisResult = result; // Store result for tab switching
 
@@ -1604,7 +1718,17 @@
               document.getElementById("metric-total").textContent = result.summary.total_complaints || "-";
               document.getElementById("metric-depts").textContent = result.summary.total_departments || "-";
               document.getElementById("metric-similarity").textContent = result.summary.high_similarity_count || "-";
-              document.getElementById("metric-priority").textContent = result.summary.priority_level || "-";
+              
+              // Update Priority Tag
+              const priorityTag = document.getElementById("metric-priority");
+              const level = result.summary.priority_level || "-";
+              priorityTag.textContent = level;
+              priorityTag.className = "tag"; // Reset
+              if (level === "高") priorityTag.classList.add("tag-red");
+              else if (level === "中高") priorityTag.classList.add("tag-amber");
+              else if (level === "中") priorityTag.classList.add("tag-blue");
+              else priorityTag.classList.add("tag-green");
+
               document.getElementById("metric-priority-foot").textContent = result.summary.priority_reason || "";
 
               document.getElementById("status-category").textContent = result.summary.main_category || "-";
@@ -1628,7 +1752,7 @@
             // Render the full report directly
             if (result.report_markdown) {
               reportPreview.innerHTML = `
-                <div style="padding: 20px; line-height: 1.6;">
+                <div class="report-content" style="padding: 20px;">
                   ${marked.parse(result.report_markdown)}
                 </div>
               `;
