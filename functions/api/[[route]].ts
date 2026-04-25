@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/cloudflare-pages';
-import OpenAI from 'openai';
 import { RAPAS_ANALYSIS_PROMPT } from '../utils/prompts';
 
 const app = new Hono().basePath('/api');
@@ -12,6 +11,7 @@ type Bindings = {
 };
 
 app.post('/analyze', async (c) => {
+  const startTime = Date.now();
   try {
     const body = await c.req.json();
     const env = c.env as Bindings;
@@ -22,73 +22,87 @@ app.post('/analyze', async (c) => {
       return c.json({ error: 'Missing QWEN_API_KEY environment variable' }, 500);
     }
 
-    const openai = new OpenAI({
-      apiKey: env.QWEN_API_KEY,
-      baseURL: env.QWEN_BASE_URL || "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    });
-
     const modelName = env.QWEN_MODEL_NAME || "qwen-plus";
+    const baseURL = (env.QWEN_BASE_URL || "https://dashscope.aliyuncs.com/compatible-mode/v1").replace(/\/+$/, '');
 
-    // Prepare the input for AI
-    const rawData = typeof input_data === 'string' ? (()=>{try{return JSON.parse(input_data)}catch(e){return input_data}})() : input_data;
+    // Optimization: avoid re-parsing if it's already a string or already an object
+    let dataStr = typeof input_data === 'string' ? input_data : JSON.stringify(input_data);
     
     const inputContext = `
 诉求人ID: ${user_id || '未知'}
 分析周期: ${analysis_period || '未指定'}
 分析模式: ${analysis_mode || '标准研判'}
 数据内容:
-${JSON.stringify(rawData, null, 2)}
+${dataStr}
 `;
 
-    console.log(`Starting analysis with model: ${modelName}, User ID: ${user_id}`);
+    console.log(`[${user_id}] Starting analysis with model: ${modelName}`);
 
-    // Create a timeout controller for the AI request
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
+    // Create a timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('TIMEOUT')), 28000); // 28s timeout to be safe
+    });
 
-    try {
-      const completion = await openai.chat.completions.create({
-        model: modelName,
-        messages: [
-          {
-            role: "system",
-            content: RAPAS_ANALYSIS_PROMPT
-          },
-          {
-            role: "user",
-            content: `请分析以下诉求数据：\n\n${inputContext}`
-          }
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.1, 
-      }, { signal: controller.signal });
-
-      clearTimeout(timeoutId);
-
-      const resultStr = completion.choices[0].message.content;
-
-      if (!resultStr) {
-        throw new Error("AI failed to generate a report");
-      }
-
-      const result = JSON.parse(resultStr);
-
-      return c.json({
-        ...result,
-        timestamp: new Date().toISOString()
+    // Create the AI request promise
+    const aiRequestPromise = (async () => {
+      const response = await fetch(`${baseURL}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${env.QWEN_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: "system", content: RAPAS_ANALYSIS_PROMPT },
+            { role: "user", content: `请分析以下诉求数据：\n\n${inputContext}` }
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.1
+        })
       });
-    } catch (err: any) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
-        console.error("Analysis timeout (25s)");
-        return c.json({ error: '分析请求超时（25秒），可能是输入数据过多或 AI 响应较慢，请稍后重试。' }, 504);
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`AI_API_ERROR: ${response.status} - ${errText}`);
       }
-      throw err;
+
+      return await response.json();
+    })();
+
+    // Race the AI request against the timeout
+    const completion: any = await Promise.race([aiRequestPromise, timeoutPromise]);
+    
+    const resultStr = completion.choices[0].message.content;
+    if (!resultStr) {
+      throw new Error("AI failed to generate a report content");
     }
 
+    const result = JSON.parse(resultStr);
+    const duration = Date.now() - startTime;
+    console.log(`[${user_id}] Analysis completed in ${duration}ms`);
+
+    return c.json({
+      ...result,
+      duration,
+      timestamp: new Date().toISOString()
+    });
+
   } catch (error: any) {
-    console.error("RAPAS Analysis Error:", error);
-    return c.json({ error: error.message }, 500);
+    const duration = Date.now() - startTime;
+    console.error(`[Analysis Error after ${duration}ms]:`, error);
+
+    if (error.message === 'TIMEOUT') {
+      return c.json({ 
+        error: '分析请求超时（28秒）。这通常是因为数据量较大或 AI 响应较慢。',
+        duration
+      }, 504);
+    }
+
+    return c.json({ 
+      error: error.message || '未知服务器错误',
+      duration
+    }, 500);
   }
 });
 
