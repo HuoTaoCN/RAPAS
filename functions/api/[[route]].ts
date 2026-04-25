@@ -40,7 +40,7 @@ ${dataStr}
 
     // Create a timeout promise
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('TIMEOUT')), 28000); // 28s timeout to be safe
+      setTimeout(() => reject(new Error('TIMEOUT')), 180000); // 180s timeout as requested
     });
 
     // Create the AI request promise
@@ -94,7 +94,7 @@ ${dataStr}
 
     if (error.message === 'TIMEOUT') {
       return c.json({ 
-        error: '分析请求超时（28秒）。这通常是因为数据量较大或 AI 响应较慢。',
+        error: '分析请求超时（180秒）。这通常是因为数据量较大或 AI 响应较慢。',
         duration
       }, 504);
     }
