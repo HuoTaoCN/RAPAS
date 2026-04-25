@@ -87,7 +87,7 @@ graph LR
 
 ## 🛠️ 技术栈
 
-*   **前端**: 原生 HTML5, CSS3 (Tailwind 风格), JavaScript (ES6+), Marked.js
+*   **前端**: 原生 HTML5, CSS3 (Tailwind 风格), JavaScript (ES6+), Marked.js, Mermaid.js
 *   **后端**: [Hono Framework](https://hono.dev/), OpenAI SDK
 *   **运行时**: [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/platform/functions/)
 *   **模型**: 默认使用 Qwen-Plus (支持所有 OpenAI 兼容接口)
@@ -119,12 +119,37 @@ npm run dev
 
 ## English Introduction
 
-**GovInsight-AI (RA)** is a professional **Repetitive Appeal Pattern Analysis Engine** designed for government hotline management. It specializes in identifying, characterizing, and providing disposal recommendations for high-frequency repetitive appeals.
+**GovInsight-AI (RA)** is a professional **Smart Repetitive Appeal Pattern Analysis Engine** designed for government hotline management (e.g., 12345). It specializes in identifying, characterizing, and providing actionable insights for high-frequency repetitive appeals from the same individual.
+
+By leveraging advanced **Large Language Models (LLM)**, the system acts as a senior analyst, deeply examining behavioral patterns, the essence of appeals, and emotional evolution. It automatically classifies appeals into **Categories A-H** and provides tiered disposal recommendations for management.
+
+### 📖 Background & Pain Points
+
+In government hotline operations, 15%-20% of work orders are repetitive appeals. These are often complex and difficult to analyze manually:
+
+*   **🕵️‍♂️ Behavior Identification**: Hard to distinguish between "legitimate persistence due to unresolved issues" and "unreasonable harassment."
+*   **🔗 Correlation Analysis**: Appeals often span multiple departments and timeframes, making it hard to trace the logical chain.
+*   **⚖️ Inconsistent Handling**: Lack of standardized judgment for "emotion-driven" or "special care" cases leads to over- or under-handling.
+*   **⚠️ Delayed Warnings**: Identification of professional petitioners or emerging group trends often happens after the fact.
 
 ### ✨ Core Features
-1.  **🧠 Intelligent Scoring**: Multidimensional scoring based on behavior patterns (Categories A-H), temporal patterns, and content similarity.
-2.  **📊 Deep Analysis**: Automated extraction of statistics, temporal chain views, and professional Markdown reports.
-3.  **🛡️ Tiered Disposal**: Tiered recommendations for petitioners, systems, and departments.
+
+1.  **🧠 Intelligent Scoring (Scoring Mechanism)**:
+    *   **Behavior Classification (A-H)**: Categorizes appeals into 8 types, from "Legitimate High-Frequency" to "Malicious Harassment" and "Special Care."
+    *   **Multi-dimensional Factors**: Analyzes temporal patterns, content similarity, and output confidence scores (0-100).
+2.  **📊 Deep Analysis View**:
+    *   **Temporal Chain View**: Transforms flat lists into event chains to identify progression and outbursts.
+    *   **Auto-Report**: Generates professional Markdown reports with executive summaries and behavioral analysis.
+3.  **🛡️ Tiered Recommendations**:
+    *   **For Petitioner**: Emotional comfort, special supervision, or legal notice.
+    *   **For System**: Warning rules, data isolation, or satisfaction labeling.
+    *   **For Department**: Cross-department collaboration, process fixing, or service improvement.
+
+### 🚀 Quick Start
+
+1.  **Install**: `npm install`
+2.  **Config**: Set `QWEN_API_KEY` and `QWEN_BASE_URL` in Cloudflare or `.dev.vars`.
+3.  **Run**: `npm run dev`
 
 ---
 
