@@ -1693,7 +1693,8 @@
             });
 
             if (!response.ok) {
-              throw new Error("API 请求失败");
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(errorData.error || `API 请求失败 (状态码: ${response.status})`);
             }
 
             // Reset dispatch buttons
@@ -1762,7 +1763,11 @@
 
           } catch (error) {
             console.error("Analysis Error:", error);
-            alert("分析失败: " + error.message);
+            let errorMessage = error.message;
+            if (error instanceof TypeError && errorMessage === "Failed to fetch") {
+              errorMessage = "无法连接到分析服务器。这通常是因为：\n1. 网络连接不稳定\n2. AI 模型响应时间过长（超过 Cloudflare 30秒限制）\n3. 浏览器拦截了跨域请求\n\n建议：缩减输入数据量，或稍后重试。";
+            }
+            alert("分析失败: " + errorMessage);
           } finally {
             analyzeBtn.disabled = false;
             analyzeBtn.classList.remove("btn-loading");

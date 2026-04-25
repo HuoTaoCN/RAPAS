@@ -27,13 +27,12 @@ app.post('/analyze', async (c) => {
       baseURL: env.QWEN_BASE_URL || "https://dashscope.aliyuncs.com/compatible-mode/v1",
     });
 
-    const modelName = env.QWEN_MODEL_NAME || "qwen3.6-plus";
+    const modelName = env.QWEN_MODEL_NAME || "qwen-plus";
 
     // Prepare the input for AI
-    let inputContext = '';
     const rawData = typeof input_data === 'string' ? (()=>{try{return JSON.parse(input_data)}catch(e){return input_data}})() : input_data;
     
-    inputContext = `
+    const inputContext = `
 诉求人ID: ${user_id || '未知'}
 分析周期: ${analysis_period || '未指定'}
 分析模式: ${analysis_mode || '标准研判'}
@@ -41,34 +40,51 @@ app.post('/analyze', async (c) => {
 ${JSON.stringify(rawData, null, 2)}
 `;
 
-    const completion = await openai.chat.completions.create({
-      model: modelName,
-      messages: [
-        {
-          role: "system",
-          content: RAPAS_ANALYSIS_PROMPT
-        },
-        {
-          role: "user",
-          content: `请分析以下诉求数据：\n\n${inputContext}`
-        }
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.1, 
-    });
+    console.log(`Starting analysis with model: ${modelName}, User ID: ${user_id}`);
 
-    const resultStr = completion.choices[0].message.content;
+    // Create a timeout controller for the AI request
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
 
-    if (!resultStr) {
-      throw new Error("AI failed to generate a report");
+    try {
+      const completion = await openai.chat.completions.create({
+        model: modelName,
+        messages: [
+          {
+            role: "system",
+            content: RAPAS_ANALYSIS_PROMPT
+          },
+          {
+            role: "user",
+            content: `请分析以下诉求数据：\n\n${inputContext}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.1, 
+      }, { signal: controller.signal });
+
+      clearTimeout(timeoutId);
+
+      const resultStr = completion.choices[0].message.content;
+
+      if (!resultStr) {
+        throw new Error("AI failed to generate a report");
+      }
+
+      const result = JSON.parse(resultStr);
+
+      return c.json({
+        ...result,
+        timestamp: new Date().toISOString()
+      });
+    } catch (err: any) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        console.error("Analysis timeout (25s)");
+        return c.json({ error: '分析请求超时（25秒），可能是输入数据过多或 AI 响应较慢，请稍后重试。' }, 504);
+      }
+      throw err;
     }
-
-    const result = JSON.parse(resultStr);
-
-    return c.json({
-      ...result,
-      timestamp: new Date().toISOString()
-    });
 
   } catch (error: any) {
     console.error("RAPAS Analysis Error:", error);
