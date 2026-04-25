@@ -7,6 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GovInsight-AI RA 重复诉求智能分析系统</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'default',
+      securityLevel: 'loose',
+    });
+  </script>
   <style>
     :root {
       --bg: #f3f6fb;
@@ -883,6 +891,22 @@
       font-size: 0.9em;
     }
 
+    .mermaid-render-container {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .mermaid-render-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
     @media (max-width: 1260px) {
       .hero,
       .grid-2 {
@@ -1374,6 +1398,29 @@
             .then(function (text) {
               content.innerHTML = marked.parse(text);
               readmeLoaded = true;
+              
+              // 渲染 Mermaid 图形
+              const mermaidBlocks = content.querySelectorAll('pre code.language-mermaid');
+              mermaidBlocks.forEach((block, index) => {
+                const pre = block.parentElement;
+                const code = block.textContent;
+                const id = `mermaid-chart-${index}`;
+                
+                const div = document.createElement('div');
+                div.className = 'mermaid-render-container';
+                div.id = id;
+                
+                pre.parentElement.replaceChild(div, pre);
+                
+                try {
+                  mermaid.render(`${id}-svg`, code).then(({ svg }) => {
+                    div.innerHTML = svg;
+                  });
+                } catch (err) {
+                  console.error('Mermaid render error:', err);
+                  div.innerHTML = '<p style="color:red">Mermaid 渲染错误</p>';
+                }
+              });
             })
             .catch(function () {
               content.textContent = "README 加载失败，请稍后直接打开 README.md 文件查看。";
