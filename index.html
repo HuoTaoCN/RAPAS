@@ -1427,14 +1427,15 @@
         });
       }
 
-      if (analyzeBtn && inputData && reportPreview) {
-        if (generateReportBtn) {
-          generateReportBtn.addEventListener("click", function() {
-            if (!currentAnalysisResult || !currentAnalysisResult.report_markdown) {
-              alert("请先进行分析以生成报告内容");
-              return;
-            }
+      if (generateReportBtn) {
+        generateReportBtn.addEventListener("click", function () {
+          console.log("Generate report clicked", currentAnalysisResult);
+          if (!currentAnalysisResult || !currentAnalysisResult.report_markdown) {
+            alert("请先进行分析以生成报告内容");
+            return;
+          }
 
+          try {
             const blob = new Blob([currentAnalysisResult.report_markdown], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1443,16 +1444,28 @@
             a.download = `重复诉求智能分析报告_${timestamp}.md`;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          });
-        }
+            setTimeout(function() {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }, 100);
+          } catch (e) {
+            console.error("Download failed", e);
+            alert("下载失败，请重试");
+          }
+        });
+      }
 
+      if (analyzeBtn && inputData && reportPreview) {
         analyzeBtn.addEventListener("click", async function() {
           const originalContent = analyzeBtn.innerHTML;
           analyzeBtn.disabled = true;
           analyzeBtn.classList.add("btn-loading");
           analyzeBtn.innerHTML = `<div class="spinner"></div><span>AI 正在研判...</span>`;
+
+          // Hide generate button when starting new analysis
+          if (generateReportBtn) {
+            generateReportBtn.style.display = "none";
+          }
 
           try {
             const body = {
