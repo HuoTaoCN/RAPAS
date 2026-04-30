@@ -1583,6 +1583,24 @@
           long: {
             userId: "U-2026-04-AX91",
             period: "2026-04-01 至 2026-04-10",
+            summary: {
+              total: "18",
+              depts: "4",
+              similarity: "18",
+              priority: "高",
+              priorityReason: "涉及用电安全隐患及邻里纠纷，诉求已演进至司法维权阶段，建议立即介入。",
+              category: "C类 衍生扩展型",
+              desc: "因基层协调失效导致诉求向物业、监管责任逐级扩展，呈现典型的衍生升级特征。",
+              confidence: "90",
+              peakDate: "2026-04-10",
+              topDepts: "住建局、街道办"
+            },
+            timeline: [
+              { time: "04-01 09:15", title: "核心诉求首次出现", content: "反映 3 栋 1502 渗水，诉求对象集中于设施修复与物业核查。" },
+              { time: "04-03 16:50", title: "衍生安全隐患", content: "新增“渗水导致短路”事实，风险等级显著抬升，开始质疑办事效率。" },
+              { time: "04-07 08:45", title: "诉求链条外扩", content: "对前期答复不满，诉求指向“物业消极怠工”与“调解缺位”。" },
+              { time: "04-10 10:30", title: "情绪达峰与司法倾向", content: "问题停不下来，明确提出“要打官司”，行为模式表现为深度焦虑下的维权升级。" }
+            ],
             data: `{
   "user_id": "U-2026-04-AX91",
   "analysis_period": "2026-04-01 至 2026-04-10",
@@ -1611,6 +1629,24 @@
           case2: {
             userId: "U-2026-04-CX55",
             period: "2026-04-15 至 2026-04-20",
+            summary: {
+              total: "12",
+              depts: "5",
+              similarity: "12",
+              priority: "高",
+              priorityReason: "诉求涉及多部门交叉管辖，核心问题持续未解且已衍生至对执法效能的质疑，存在民生矛盾升级与舆情发酵风险。",
+              category: "C类 衍生扩展型",
+              desc: "诉求人围绕同一夜市扰民事件，从具体的占道、油烟、噪音问题逐步扩展至部门履职质疑、联合执法诉求及市容卫生投诉，呈现典型的衍生扩展特征。",
+              confidence: "92",
+              peakDate: "2026-04-20",
+              topDepts: "综合执法、环保局"
+            },
+            timeline: [
+              { time: "04-15 21:30", title: "夜市扰民初现", content: "反映占道经营与油烟噪音，诉求指向综合执法与环保部门。" },
+              { time: "04-17 19:30", title: "管理效能质疑", content: "多次反映无改善，开始投诉综合执法部门不作为，诉求升级至市长热线。" },
+              { time: "04-19 23:50", title: "问题多维扩散", content: "新增卫生恶化与治安隐患描述，诉求覆盖范围扩大至街道办与公安局。" },
+              { time: "04-20 19:00", title: "系统化治理诉求", content: "明确要求跨部门联合执法与彻底取缔，表现出明显的衍生扩展与维权升级特征。" }
+            ],
             data: `{
   "user_id": "U-2026-04-CX55",
   "analysis_period": "2026-04-15 至 2026-04-20",
@@ -1633,6 +1669,24 @@
           case3: {
             userId: "U-2026-04-DX88",
             period: "2026-04-22 至 2026-04-30",
+            summary: {
+              total: "15",
+              depts: "4",
+              similarity: "15",
+              priority: "高",
+              priorityReason: "区域性环境卫生管理失效，引发居民集体焦虑与卫生防疫担忧，需加强物业外包监管。",
+              category: "A类 真实高频型",
+              desc: "因垃圾清运服务中断导致的真实高频诉求，表现出明显的地域集中性与诉求紧迫性。",
+              confidence: "95",
+              peakDate: "2026-04-30",
+              topDepts: "环卫处、街道办"
+            },
+            timeline: [
+              { time: "04-22 08:00", title: "清运延时初现", content: "垃圾桶满溢，居民首次尝试报修。" },
+              { time: "04-24 16:45", title: "卫生风险预警", content: "垃圾大量堆放滋生蚊虫，居民开始表达卫生防疫方面的集体焦虑。" },
+              { time: "04-27 09:10", title: "管理责任追问", content: "清运中断进入第5天，诉求升级至市长热线，要求彻查管理瘫痪原因。" },
+              { time: "04-30 17:30", title: "服务信任崩塌", content: "垃圾堵门导致生活受阻，明确要求更换服务商，表现出强烈的行政效率质疑。" }
+            ],
             data: `{
   "user_id": "U-2026-04-DX88",
   "analysis_period": "2026-04-22 至 2026-04-30",
@@ -1673,6 +1727,42 @@
             document.getElementById("user-id").value = caseData.userId;
             document.getElementById("period").value = caseData.period;
             inputData.value = caseData.data;
+
+            // Update UI components if summary exists
+            if (caseData.summary) {
+              document.getElementById("metric-total").textContent = caseData.summary.total;
+              document.getElementById("metric-depts").textContent = caseData.summary.depts;
+              document.getElementById("metric-similarity").textContent = caseData.summary.similarity;
+              
+              const priorityTag = document.getElementById("metric-priority");
+              priorityTag.textContent = caseData.summary.priority;
+              priorityTag.className = "tag";
+              if (caseData.summary.priority === "高") priorityTag.classList.add("tag-red");
+              else if (caseData.summary.priority === "中高") priorityTag.classList.add("tag-amber");
+              else priorityTag.classList.add("tag-blue");
+
+              document.getElementById("metric-priority-foot").textContent = caseData.summary.priorityReason;
+              document.getElementById("status-category").textContent = caseData.summary.category;
+              document.getElementById("status-desc").textContent = caseData.summary.desc;
+              document.getElementById("status-confidence").textContent = caseData.summary.confidence + "% 已完成证据匹配";
+              document.getElementById("status-progress-bar").style.width = caseData.summary.confidence + "%";
+              document.getElementById("metric-total-foot").textContent = `峰值集中在 ${caseData.summary.peakDate}`;
+              document.getElementById("metric-depts-foot").textContent = caseData.summary.topDepts;
+            }
+
+            // Update timeline if exists
+            if (caseData.timeline) {
+              const timelineContainer = document.querySelector(".timeline");
+              timelineContainer.innerHTML = caseData.timeline.map(item => `
+                <div class="timeline-item">
+                  <time>${item.time}</time>
+                  <div class="timeline-content">
+                    <strong>${item.title}</strong>
+                    <p>${item.content}</p>
+                  </div>
+                </div>
+              `).join("");
+            }
           });
         });
       }
