@@ -1043,12 +1043,16 @@
 
       <div class="case-selector" id="case-selector">
         <div class="case-card active" data-case="long">
-          <strong>示例 1: 门禁与渗水 (20条)</strong>
-          <p>跨度一年的长周期复杂诉求，涉及多部门办理质量问题。</p>
+          <strong>示例 1: 渗水纠纷 (18条)</strong>
+          <p>跨度十天的长周期复杂诉求，涉及多部门办理质量与邻里纠纷。</p>
         </div>
-        <div class="case-card" data-case="short">
-          <strong>示例 2: 房屋渗水 (2条)</strong>
-          <p>简单的重复诉求示例，侧重于基本行为模式识别。</p>
+        <div class="case-card" data-case="case2">
+          <strong>示例 2: 占道经营 (12条)</strong>
+          <p>集中在夜间的摊贩占道与噪音问题，呈现高频周期性爆发特征。</p>
+        </div>
+        <div class="case-card" data-case="case3">
+          <strong>示例 3: 垃圾清运 (15条)</strong>
+          <p>区域性公共卫生管理疏漏，引发居民集体焦虑与环境质量质疑。</p>
         </div>
         <div class="case-card" data-case="custom">
           <strong>手动录入 / 自定义</strong>
@@ -1103,22 +1107,24 @@
   "user_id": "U-2026-04-AX91",
   "analysis_period": "2026-04-01 至 2026-04-10",
   "complaints": [
-    {
-      "id": "GD20260401001",
-      "time": "2026-04-01 09:12",
-      "content": "反映小区5号楼外墙渗水，多次报修仍未处理，夜间噪音严重。",
-      "department": "住建部门",
-      "reply": "已转物业核实处理。",
-      "evaluation": "回复笼统，没有实质处理。"
-    },
-    {
-      "id": "GD20260403016",
-      "time": "2026-04-03 14:26",
-      "content": "5号楼渗水问题仍未解决，物业承诺后一直无人上门，墙皮继续脱落。",
-      "department": "街道办",
-      "reply": "建议继续联系物业。",
-      "evaluation": "还是推来推去。"
-    }
+    { "id": "W-001", "time": "2026-04-01 09:15", "dept": "住建局", "content": "反映XX小区3栋1502房卫生间顶板渗水，已联系物业多次无果。" },
+    { "id": "W-002", "time": "2026-04-01 14:30", "dept": "住建局", "content": "3栋1502渗水问题，物业说没权查楼上，请政府介入。" },
+    { "id": "W-003", "time": "2026-04-02 10:00", "dept": "街道办", "content": "XX小区渗水，住建局推给物业，物业推给楼上，现在家里墙皮脱落。" },
+    { "id": "W-004", "time": "2026-04-03 08:20", "dept": "住建局", "content": "渗水严重，1602房主不配合，要求强制检测。" },
+    { "id": "W-005", "time": "2026-04-03 11:45", "dept": "物业监管", "content": "投诉XX物业消极怠工，不履行渗水协调责任。" },
+    { "id": "W-006", "time": "2026-04-03 16:50", "dept": "街道办", "content": "渗水导致短路，存在安全隐患，没人管吗？" },
+    { "id": "W-007", "time": "2026-04-04 09:30", "dept": "住建局", "content": "3栋1502渗水，要求确认是否属于房屋质量问题。" },
+    { "id": "W-008", "time": "2026-04-05 14:10", "dept": "社区服务", "content": "反映1502与1602渗水纠纷，调解员没来。" },
+    { "id": "W-009", "time": "2026-04-06 10:20", "dept": "住建局", "content": "渗水扩散到客厅，必须马上解决。" },
+    { "id": "W-010", "time": "2026-04-07 08:45", "dept": "街道办", "content": "对之前渗水问题的答复不满意，全是空话。" },
+    { "id": "W-011", "time": "2026-04-07 15:30", "dept": "物业监管", "content": "再次投诉物业，渗水半个月了。" },
+    { "id": "W-012", "time": "2026-04-08 11:20", "dept": "住建局", "content": "要求1602承担维修费用，渗水已经影响生活。" },
+    { "id": "W-013", "time": "2026-04-08 16:40", "dept": "街道办", "content": "渗水问题迟迟不决，质疑办事效率。" },
+    { "id": "W-014", "time": "2026-04-09 09:10", "dept": "住建局", "content": "3栋1502渗水，墙壁发霉，有异味。" },
+    { "id": "W-015", "time": "2026-04-09 14:55", "dept": "社区服务", "content": "再次要求社区介入渗水纠纷调解。" },
+    { "id": "W-016", "time": "2026-04-10 10:30", "dept": "住建局", "content": "渗水停不下来，要打官司了。" },
+    { "id": "W-017", "time": "2026-04-10 15:20", "dept": "物业监管", "content": "物业还是没动静，必须处罚。" },
+    { "id": "W-018", "time": "2026-04-10 17:45", "dept": "街道办", "content": "渗水渗水渗水！到底谁能管？" }
   ]
 }</textarea>
               </div>
@@ -1157,31 +1163,31 @@
               </div>
               <div class="metric-card">
                 <span>高相似工单</span>
-                <strong id="metric-similarity">11</strong>
-                <div class="metric-foot">相似度 > 0.85，存在明显复述现象</div>
+                <strong id="metric-similarity">18</strong>
+                <div class="metric-foot">相似度 > 0.95，均属同一核心事件簇</div>
               </div>
               <div class="metric-card">
                 <span>优先复核等级</span>
                 <div style="margin: 4px 0;">
-                  <span class="tag tag-amber" id="metric-priority">中高</span>
+                  <span class="tag tag-red" id="metric-priority">高</span>
                 </div>
-                <div class="metric-foot" id="metric-priority-foot">真实问题信号强，建议专人统筹办理</div>
+                <div class="metric-foot" id="metric-priority-foot">涉及用电安全隐患及邻里纠纷，建议立即介入</div>
               </div>
             </div>
 
             <div class="status-card">
               <div class="status-line">
                 <strong>当前主判定</strong>
-                <span class="tag tag-blue" id="status-category">A 类 + C 类</span>
+                <span class="tag tag-blue" id="status-category">C 类 衍生扩展型</span>
               </div>
               <div class="status-line">
                 <span>解释</span>
-                <span id="status-desc">同一核心问题未解，引发跨部门衍生投诉</span>
+                <span id="status-desc">因基层协调失效导致诉求向物业、监管责任逐级扩展</span>
               </div>
-              <div class="progress"><div id="status-progress-bar"></div></div>
+              <div class="progress"><div id="status-progress-bar" style="width: 90%;"></div></div>
               <div class="status-line">
                 <span>结论可信度</span>
-                <span id="status-confidence">68% 已完成证据匹配</span>
+                <span id="status-confidence">90% 已完成证据匹配</span>
               </div>
             </div>
           </div>
@@ -1281,31 +1287,31 @@
             <div class="panel-body">
               <div class="timeline">
                 <div class="timeline-item">
-                  <time>04-01 09:12</time>
+                  <time>04-01 09:15</time>
                   <div class="timeline-content">
                     <strong>核心诉求首次出现</strong>
-                    <p>反映 5 号楼渗水和夜间噪音，诉求对象集中于设施修复与现场核查。</p>
+                    <p>反映 3 栋 1502 渗水，诉求对象集中于设施修复与物业核查。</p>
                   </div>
                 </div>
                 <div class="timeline-item">
-                  <time>04-03 14:26</time>
+                  <time>04-03 16:50</time>
                   <div class="timeline-content">
-                    <strong>等待后再次反映</strong>
-                    <p>新增“物业承诺后未上门”“墙皮继续脱落”等事实，符合真实问题持续存在的表达模式。</p>
+                    <strong>衍生安全隐患</strong>
+                    <p>新增“渗水导致短路”事实，风险等级显著抬升，开始质疑办事效率。</p>
                   </div>
                 </div>
                 <div class="timeline-item">
-                  <time>04-04 10:05</time>
+                  <time>04-07 08:45</time>
                   <div class="timeline-content">
                     <strong>诉求链条外扩</strong>
-                    <p>开始指向物业不作为与监管履职问题，进入衍生扩展阶段。</p>
+                    <p>对前期答复不满，诉求指向“物业消极怠工”与“调解缺位”。</p>
                   </div>
                 </div>
                 <div class="timeline-item">
-                  <time>04-05 08:40</time>
+                  <time>04-10 10:30</time>
                   <div class="timeline-content">
-                    <strong>情绪抬升但事实主线稳定</strong>
-                    <p>评价用词更强烈，但仍围绕原始问题提出可核实事项，未出现明显失真内容。</p>
+                    <strong>情绪达峰与司法倾向</strong>
+                    <p>问题停不下来，明确提出“要打官司”，行为模式表现为深度焦虑下的维权升级。</p>
                   </div>
                 </div>
               </div>
@@ -1602,15 +1608,50 @@
   ]
 }`
           },
-          short: {
-            userId: "U-2026-04-BX22",
-            period: "2026-04-20 至 2026-04-21",
+          case2: {
+            userId: "U-2026-04-CX55",
+            period: "2026-04-15 至 2026-04-20",
             data: `{
-  "user_id": "U-2026-04-BX22",
-  "analysis_period": "2026-04-20 至 2026-04-21",
+  "user_id": "U-2026-04-CX55",
+  "analysis_period": "2026-04-15 至 2026-04-20",
   "complaints": [
-    { "id": "W-101", "time": "2026-04-20 10:00", "dept": "住建局", "content": "家里渗水了，找物业没用。" },
-    { "id": "W-102", "time": "2026-04-21 09:30", "dept": "住建局", "content": "昨天反映的渗水，还没人来修。" }
+    { "id": "C-001", "time": "2026-04-15 21:30", "dept": "综合执法", "content": "XX路与YY路交汇口，夜市摊位占用了人行道，行人只能走机动车道。" },
+    { "id": "C-002", "time": "2026-04-15 22:45", "dept": "环保局", "content": "楼下夜市烧烤油烟太大，窗户都不敢开，噪音吵得孩子睡不着。" },
+    { "id": "C-003", "time": "2026-04-16 20:00", "dept": "综合执法", "content": "占道经营又开始了，城管来了一下就走，人一走摊位就回来。" },
+    { "id": "C-004", "time": "2026-04-16 23:20", "dept": "公安局", "content": "夜市摊位发生争吵，声音非常大，严重扰民。" },
+    { "id": "C-005", "time": "2026-04-17 19:30", "dept": "市长热线", "content": "投诉综合执法部门不作为，占道经营问题反映多次无改善。" },
+    { "id": "C-006", "time": "2026-04-18 21:00", "dept": "综合执法", "content": "今晚摊位更多了，已经把小区门口堵死，车都进不去。" },
+    { "id": "C-007", "time": "2026-04-18 22:30", "dept": "环保局", "content": "烧烤摊违规使用高分贝扩音器，噪音爆表。" },
+    { "id": "C-008", "time": "2026-04-19 20:15", "dept": "综合执法", "content": "要求彻底取缔此处的非法夜市，还居民清静。" },
+    { "id": "C-009", "time": "2026-04-19 23:50", "dept": "街道办", "content": "夜市收摊后满地垃圾，污水横流，严重影响市容。" },
+    { "id": "C-010", "time": "2026-04-20 19:00", "dept": "市长热线", "content": "对之前的处理结果不满意，要求相关部门联合执法。" },
+    { "id": "C-011", "time": "2026-04-20 21:30", "dept": "综合执法", "content": "占道经营依然存在，城管办案效率极低。" },
+    { "id": "C-012", "time": "2026-04-20 23:10", "dept": "环保局", "content": "噪音和油烟问题何时能解决？已经影响正常生活。" }
+  ]
+}`
+          },
+          case3: {
+            userId: "U-2026-04-DX88",
+            period: "2026-04-22 至 2026-04-30",
+            data: `{
+  "user_id": "U-2026-04-DX88",
+  "analysis_period": "2026-04-22 至 2026-04-30",
+  "complaints": [
+    { "id": "D-001", "time": "2026-04-22 08:00", "dept": "环卫处", "content": "XX社区12号楼下的垃圾桶已经满了，没人来清运。" },
+    { "id": "D-002", "time": "2026-04-23 09:30", "dept": "街道办", "content": "垃圾堆在桶外没人管，天气转热，味道非常难闻。" },
+    { "id": "D-003", "time": "2026-04-24 10:00", "dept": "环卫处", "content": "投诉环卫外包公司偷懒，已经三天没见到清运车了。" },
+    { "id": "D-004", "time": "2026-04-24 16:45", "dept": "市容环境", "content": "垃圾站堆放点溢出，苍蝇滋生，存在卫生防疫风险。" },
+    { "id": "D-005", "time": "2026-04-25 08:20", "dept": "环卫处", "content": "垃圾桶坏了也没人换，污水流了一地。" },
+    { "id": "D-006", "time": "2026-04-26 11:30", "dept": "街道办", "content": "反映垃圾清运问题，街道推给环卫，环卫不接电话。" },
+    { "id": "D-007", "time": "2026-04-27 09:10", "dept": "市长热线", "content": "整个社区的卫生管理瘫痪，要求彻查原因。" },
+    { "id": "D-008", "time": "2026-04-27 15:00", "dept": "环卫处", "content": "垃圾清运车今天来了，但只收了两个桶就走了，剩下的还是没人管。" },
+    { "id": "D-009", "time": "2026-04-28 08:45", "dept": "市容环境", "content": "垃圾腐烂发臭，严重影响周边居民楼生活。" },
+    { "id": "D-010", "time": "2026-04-28 14:20", "dept": "街道办", "content": "要求公布清运排班表，接受居民监督。" },
+    { "id": "D-011", "time": "2026-04-29 10:30", "dept": "环卫处", "content": "再次反映12号楼垃圾满溢问题，已经一周了！" },
+    { "id": "D-012", "time": "2026-04-29 16:00", "dept": "市长热线", "content": "管理混乱，垃圾清运费白交了，要求退费。" },
+    { "id": "D-013", "time": "2026-04-30 08:15", "dept": "街道办", "content": "垃圾已经堵住了单元门口，这是严重的失职。" },
+    { "id": "D-014", "time": "2026-04-30 11:50", "dept": "环卫处", "content": "最后一次反映，再没人管就直接送到区政府门口。" },
+    { "id": "D-015", "time": "2026-04-30 17:30", "dept": "市容环境", "content": "对目前的环卫服务质量极度失望，要求更换服务商。" }
   ]
 }`
           },
