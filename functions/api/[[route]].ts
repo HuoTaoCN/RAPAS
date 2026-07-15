@@ -22,7 +22,7 @@ app.post('/analyze', async (c) => {
       return c.json({ error: 'Missing QWEN_API_KEY environment variable' }, 500);
     }
 
-    const modelName = env.QWEN_MODEL_NAME || "qwen-plus";
+    const modelName = env.QWEN_MODEL_NAME || "qwen3.7-plus";
     const baseURL = (env.QWEN_BASE_URL || "https://dashscope.aliyuncs.com/compatible-mode/v1").replace(/\/+$/, '');
 
     // Optimization: avoid re-parsing if it's already a string or already an object
