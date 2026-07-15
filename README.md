@@ -111,7 +111,7 @@ npm run dev
 在 Cloudflare Pages 面板或 `.dev.vars` 中配置：
 *   `QWEN_API_KEY`: 你的密钥
 *   `QWEN_BASE_URL`: 接口地址
-*   `QWEN_MODEL_NAME`: 模型名称 (默认 qwen-plus)
+*   `QWEN_MODEL_NAME`: 模型名称 (默认 deepseek-v4-flash)
 
 ---
 
