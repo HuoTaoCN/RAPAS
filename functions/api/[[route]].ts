@@ -64,7 +64,16 @@ ${dataStr}
 
       if (!response.ok) {
         const errText = await response.text();
-        throw new Error(`AI_API_ERROR: ${response.status} - ${errText}`);
+        let errorMsg = `AI_API_ERROR: ${response.status} - ${errText}`;
+        
+        // 识别常见的 API 错误并提供更友好的提示
+        if (errText.includes('free quota') || errText.includes('QuotaExhausted') || errText.includes('AllocationQuota')) {
+          errorMsg = 'API_QUOTA_EXHAUSTED';
+        } else if (errText.includes('invalid_api_key') || errText.includes('Invalid API key')) {
+          errorMsg = 'API_KEY_INVALID';
+        }
+        
+        throw new Error(errorMsg);
       }
 
       return await response.json();
@@ -97,6 +106,16 @@ ${dataStr}
         error: '分析请求超时（180秒）。这通常是因为数据量较大或 AI 响应较慢。',
         duration
       }, 504);
+    } else if (error.message === 'API_QUOTA_EXHAUSTED') {
+      return c.json({ 
+        error: 'API 免费配额已用完！请登录阿里云百炼平台购买配额或更换 API Key。',
+        duration
+      }, 503);
+    } else if (error.message === 'API_KEY_INVALID') {
+      return c.json({ 
+        error: 'API Key 无效，请检查配置的 QWEN_API_KEY 是否正确。',
+        duration
+      }, 401);
     }
 
     return c.json({ 
